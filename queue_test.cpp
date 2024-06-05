@@ -19,7 +19,7 @@ struct ActiveObject {
   std::thread t;
 
   ActiveObject(std::string s)
-      : s_{s}, done{false}, message_queue{}, t{[=]() {
+      : s_{s}, done{false}, message_queue{}, t{[&]() {
           Message msg{};
           // std::cout << s_ << " Thread start" << std::endl;
           while (!done) {
@@ -41,28 +41,23 @@ struct ActiveObject {
   }
 
   void die() {
-    send([=]() { done = true; });
+      send([&,this]() { done = true; });
   }
 
   void ping(ActiveObject &target, size_t n) {
-    // std::cout << s_ << " ping " << target.s_ << std::endl;
-    if (n < 1000000) {
-      if ((n & ((1 << 15) - 1)) == 0) {
-        std::cout << s_ << "n is ..." << n << std::endl;
-      };
-      // std::cout << s_ << " About to send" << std::endl;
-      send([=, &target]() {
-        // std::cout << s_ << " Pinging the c*nt" << std::endl;
-        // std::cout << s_ << " target is " << &target << " this is " << this <<
-        // std::endl;
-        target.ping(*this, n + 1);
-      });
-      // std::cout << s_ << " Ping done..." << std::endl;
-    } else {
-      std::cout << "Die" << std::endl;
-      die();
-      target.die();
-    }
+      //std::cout << s_ << " ping " << target.s_ << std::endl;
+      if ((n & ( 1 << 21)) == 0 ) {
+          if ((n & ((1 << 15) - 1)) == 0) {
+              std::cout << s_ << " : n is ... " << n << std::endl;
+          };
+          send([n,this,&target]() {
+              target.ping(*this, n + 1);
+          });
+      } else {
+          std::cout << "Die " << static_cast<int32_t>(n) << std::endl;
+          die();
+          target.die();
+      }
   }
 };
 
@@ -70,7 +65,7 @@ int main() {
   ActiveObject a1{"a1"};
   ActiveObject a2{"a2"};
 
-  a2.ping(a1, 0);
+  a2.ping(a1, 1);
 
   a1.join();
   a2.join();

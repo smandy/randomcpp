@@ -23,6 +23,9 @@ vanillaEnv = Environment(
     #'PATH' : ":".join(envPath)
     #}
 )
+vanillaEnv.Tool('compilation_db')
+vanillaEnv.CompilationDatabase()
+
 
 def makeObject(x):
     return vanillaEnv.Object('%s.cpp' % x )

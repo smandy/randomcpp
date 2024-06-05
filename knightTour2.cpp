@@ -5,6 +5,8 @@
 #include <vector>
 #include <cstdint>
 
+#include <functional>
+
 using Coord = std::complex<int16_t>;
 using CoordVec = std::vector<Coord>;
 using CoordVecVec = std::vector<CoordVec>;
@@ -84,12 +86,29 @@ void doTour(CbType &&cb, Coord startingPoint = {0, 0}) {
   }
 }
 
+struct Foo {
+    int count;
+    
+    bool cb( CoordVec &&vec) {
+        std::cout << ++count << " :";
+        print(std::cout, vec);
+        std::cout << "\n";
+        return true;
+    };
+};
+
+
 int main(int, char *[]) {
   int x{};
-  doTour([&](auto vec) {
-    std::cout << x << " : ";
-    print(std::cout, vec);
-    std::cout << std::endl;
-    return ++x < 100;
-  });
+
+  Foo foo;
+  
+  // doTour([&](auto vec) {
+  //   std::cout << x << " : ";
+  //   print(std::cout, vec);
+  //   std::cout << std::endl;
+  //   return ++x < 100;
+  // });
+
+  doTour( std::bind( &Foo::cb, &foo, std::placeholders::_1 ));
 }

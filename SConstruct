@@ -24,15 +24,15 @@ vanillaEnv = Environment(
     #}
 )
 
-# def makeObject(x):
-#     return vanillaEnv.Object('%s.cpp' % x )
+def makeObject(x):
+    return vanillaEnv.Object('%s.cpp' % x )
 
-# mmapper, pingPong, mpmc, rateTimer, trade, tradeServer, vwap  = [ makeObject(x) for x in 'mmapper,pingPong,mpmc,rateTimer,trade,tradeServer,vwap'.split(',') ]
+mmapper, pingPong, mpmc, rateTimer, trade, tradeServer, vwap  = [ makeObject(x) for x in 'mmapper,pingPong,mpmc,rateTimer,trade,tradeServer,vwap'.split(',') ]
 
-# testRateTimer = vanillaEnv.Program('testRateTimer',['testRateTimer.cpp'  , rateTimer] )
-# ping          = vanillaEnv.Program('ping', ['ping.cpp', pingPong, mmapper, rateTimer] )
-# pong          = vanillaEnv.Program('pong', ['pong.cpp', pingPong, mmapper, rateTimer] )
-# jsonexample = vanillaEnv.Program('jsonExample', ['jsonExample.cpp'], LIBS= vanillaLibs + ['docopt'] )
+testRateTimer = vanillaEnv.Program('testRateTimer',['testRateTimer.cpp'  , rateTimer] )
+ping          = vanillaEnv.Program('ping', ['ping.cpp', pingPong, mmapper, rateTimer] )
+pong          = vanillaEnv.Program('pong', ['pong.cpp', pingPong, mmapper, rateTimer] )
+jsonexample = vanillaEnv.Program('jsonExample', ['jsonExample.cpp'], LIBS= vanillaLibs + ['docopt'] )
 
 progs = [ 'move',
           'relations',
@@ -160,36 +160,37 @@ progs = [ 'move',
           'hammer',
           'arrayTest',
           'polygon',
-          'stairs'
+          'stairs',
+          'exprtk_sqrt_newton_raphson'
           ]
 
-progs = [ 'exprtk_sqrt_newton_raphson' ]
+#progs = [ 'exprtk_sqrt_newton_raphson' ]
 
 
 [ vanillaEnv.Program( '%s.cpp' % x ) for x in progs ]
 
-# vanillaEnv.Program('epoll_example.c')
+vanillaEnv.Program('epoll_example.c')
 
-# box2dEnv = vanillaEnv.Clone()
+box2dEnv = vanillaEnv.Clone()
 
-# tbbEnv = vanillaEnv.Clone()
-# tbbEnv.Program('active_object.cpp', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
-# tbbEnv.Program('queue_test.cpp', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
+tbbEnv = vanillaEnv.Clone()
+tbbEnv.Program('active_object.cpp', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
+tbbEnv.Program('queue_test.cpp', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
 
-# #helloWorld = box2dEnv.Program('box2d_helloworld.cpp', LIBS=['Box2D'])
+#helloWorld = box2dEnv.Program('box2d_helloworld.cpp', LIBS=['Box2D'])
 
-# mpmcTest   = vanillaEnv.Program('testMpmc'  , source = [ 'testMpmc.cpp'  ,mpmc] )
-# mpmcSanity = vanillaEnv.Program('mpmcSanity', source = [ 'mpmcSanity.cpp',mpmc] )
+mpmcTest   = vanillaEnv.Program('testMpmc'  , source = [ 'testMpmc.cpp'  ,mpmc] )
+mpmcSanity = vanillaEnv.Program('mpmcSanity', source = [ 'mpmcSanity.cpp',mpmc] )
 
-# sharedFromThisTest = vanillaEnv.Program('sharedFromThisTest.cpp')
+sharedFromThisTest = vanillaEnv.Program('sharedFromThisTest.cpp')
 
-# xcbExample = vanillaEnv.Program('xcbexample.cpp', LIBS = ['xcb'])
+xcbExample = vanillaEnv.Program('xcbexample.cpp', LIBS = ['xcb'])
 
-# tradeReader          = vanillaEnv.Program('tradeReader', ['tradeReader.cpp', mmapper, trade] )
-# tradeServerMain = vanillaEnv.Program('tradeServerMain', ['tradeServerMain.cpp', tradeServer, mmapper, trade] )
-# tradeClientMain = vanillaEnv.Program('tradeClientMain', ['tradeClientMain.cpp', mmapper, trade] )
-# tradeSourceImpl = vanillaEnv.Program('tradeSourceImpl', ['tradeSourceImpl.cpp', mmapper, trade] )
+tradeReader          = vanillaEnv.Program('tradeReader', ['tradeReader.cpp', mmapper, trade] )
+tradeServerMain = vanillaEnv.Program('tradeServerMain', ['tradeServerMain.cpp', tradeServer, mmapper, trade] )
+tradeClientMain = vanillaEnv.Program('tradeClientMain', ['tradeClientMain.cpp', mmapper, trade] )
+tradeSourceImpl = vanillaEnv.Program('tradeSourceImpl', ['tradeSourceImpl.cpp', mmapper, trade] )
 
-## vwapNetworkClient = vanillaEnv.Program('vwapNetworkClient', ['vwapNetworkClient.cpp', mmapper, trade] )
+vwapNetworkClient = vanillaEnv.Program('vwapNetworkClient', ['vwapNetworkClient.cpp', mmapper, trade] )
 
 

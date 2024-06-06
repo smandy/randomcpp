@@ -1,0 +1,4 @@
+* Randomcpp
+
+  A kitchen sink project containing small code examples that have been
+  used to explore various aspects of C++.

@@ -164,6 +164,7 @@ progs = [ 'move',
           'arrayTest',
           'polygon',
           'stairs',
+          'helloWorld',
           'exprtk_sqrt_newton_raphson'
           ]
 

@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
   ManyToManyWriter<uint64_t, 1, 4096, 1> myWriter("/dev/shm/andy1.dat");
   ManyToManyWriter<uint64_t, 1, 4096, 1> myWriter2("/dev/shm/andy1.dat");
 
-  auto looper = true;
+  auto looper = false;
 
   thread t2([&]() {
     uint64_t iters = (1 << 25) / 2;

@@ -15,6 +15,10 @@ Vec myFilter( Vec &arg, std::function<bool(T&)> pred) {
     return ret;
 }
 
+std::function<bool(Person&)> lastNameIs( std::string s) {
+    return [&s]( auto &p) { return p.second == s; };
+};
+
 int main(int, char *[]) {
     std::cout << "HelloWorld\n";
 
@@ -43,8 +47,7 @@ int main(int, char *[]) {
         std::cout << first << " : " << last << "\n";
     };
 
-    std::function<bool(Person&)> pred = [](auto &p) { return p.second == "Flintstone"; };
-    for( auto &f : myFilter(people, pred )) {
+    for(auto &f : myFilter(people, lastNameIs("Flintstone"))) {
         std::cout << "A flintstone is " << f.first << " " << f.second << "\n";
     };
 }

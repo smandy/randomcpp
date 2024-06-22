@@ -9,7 +9,9 @@ envPath = [ #COMPILER_PATH,
             '/usr/bin' ]
 #print("Path is %s" % str(envPath))
 
-vanillaLibs = ['pthread', 'boost_filesystem','boost_system', 'jsoncpp']
+#vanillaLibs = ['pthread', 'boost_filesystem','boost_system', 'jsoncpp']
+
+vanillaLibs = []
 
 vanillaEnv = Environment(
     #CPPPATH   = ['/home/andy/include'],
@@ -23,19 +25,14 @@ vanillaEnv = Environment(
     #'PATH' : ":".join(envPath)
     #}
 )
+
 vanillaEnv.Tool('compilation_db')
 vanillaEnv.CompilationDatabase()
 
-
 def makeObject(x):
-    return vanillaEnv.Object('%s.cpp' % x )
+    return vanillaEnv.Object(source = f'{x}.cpp', target = f'build/{x}.o')
 
 mmapper, pingPong, mpmc, rateTimer, trade, tradeServer, vwap  = [ makeObject(x) for x in 'mmapper,pingPong,mpmc,rateTimer,trade,tradeServer,vwap'.split(',') ]
-
-testRateTimer = vanillaEnv.Program('testRateTimer',['testRateTimer.cpp'  , rateTimer] )
-ping          = vanillaEnv.Program('ping', ['ping.cpp', pingPong, mmapper, rateTimer] )
-pong          = vanillaEnv.Program('pong', ['pong.cpp', pingPong, mmapper, rateTimer] )
-jsonexample = vanillaEnv.Program('jsonExample', ['jsonExample.cpp'], LIBS= vanillaLibs + ['docopt'] )
 
 progs = [ 'move',
           'relations',
@@ -43,7 +40,6 @@ progs = [ 'move',
           'traits',
           'forwarding',
           'forwarding2',
-          'twonk',
           'doit',
           'lockExperiment',
           'tmp',
@@ -92,21 +88,18 @@ progs = [ 'move',
           'testPrettyPrint',
           'myPromise',
           'cherryPick',
-          'packFun', #Wait for 17 :-) for the commented one
+          'packFun',
           'moveCapture',
           'initList',
           'chatServer',
           'bindFun',
-          #'chain'
           'stringReverse',
           'arrayDecay',
           'scopeExperiment',
           'lineReader',
           'boostRefCountExample',
-          'filesystemExperiment',
           'destructor',
           'printTest',
-          #'virtualExperiment',
           'virtualExperiment2',
           'dynclass',
           'except',
@@ -134,20 +127,14 @@ progs = [ 'move',
           'mutabletest',
           'google',
           'jen',
-          #'thread_fun',
           'foo',
           'moveTest3',
           'bindExample',
-          #'ctad',
           'overloaded',
-          'fileSystem',
-          #'tradeSourceImpl'
           'sink',
           'boost_shared_memory',
-          #'crtp3'
           'optimizer',
           'foldExpression',
-          #'crtp4'
           'owner',
           'variadic',
           'sfinae',
@@ -165,36 +152,33 @@ progs = [ 'move',
           'polygon',
           'stairs',
           'helloWorld',
-          'exprtk_sqrt_newton_raphson'
+          'exprtk_sqrt_newton_raphson',
+          'sharedFromThisTest'
           ]
 
-#progs = [ 'exprtk_sqrt_newton_raphson' ]
+def makeProgram(prog, **kwargs):
+    o = vanillaEnv.Object( source = f'{prog}.cpp' ,target=f'build/{prog}')
+    vanillaEnv.Program(source = o, target = f'bin/{prog}', **kwargs)
 
+for prog in progs:
+    makeProgram( prog)
 
-[ vanillaEnv.Program( '%s.cpp' % x ) for x in progs ]
-
-vanillaEnv.Program('epoll_example.c')
-
-box2dEnv = vanillaEnv.Clone()
-
-tbbEnv = vanillaEnv.Clone()
-tbbEnv.Program('active_object.cpp', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
-tbbEnv.Program('queue_test.cpp', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
-
-#helloWorld = box2dEnv.Program('box2d_helloworld.cpp', LIBS=['Box2D'])
-
-mpmcTest   = vanillaEnv.Program('testMpmc'  , source = [ 'testMpmc.cpp'  ,mpmc] )
-mpmcSanity = vanillaEnv.Program('mpmcSanity', source = [ 'mpmcSanity.cpp',mpmc] )
-
-sharedFromThisTest = vanillaEnv.Program('sharedFromThisTest.cpp')
-
-xcbExample = vanillaEnv.Program('xcbexample.cpp', LIBS = ['xcb'])
-
-tradeReader          = vanillaEnv.Program('tradeReader', ['tradeReader.cpp', mmapper, trade] )
-tradeServerMain = vanillaEnv.Program('tradeServerMain', ['tradeServerMain.cpp', tradeServer, mmapper, trade] )
-tradeClientMain = vanillaEnv.Program('tradeClientMain', ['tradeClientMain.cpp', mmapper, trade] )
-tradeSourceImpl = vanillaEnv.Program('tradeSourceImpl', ['tradeSourceImpl.cpp', mmapper, trade] )
-
-vwapNetworkClient = vanillaEnv.Program('vwapNetworkClient', ['vwapNetworkClient.cpp', mmapper, trade] )
+makeProgram('twonk', LIBS = ['boost_system', 'boost_filesystem'])
+makeProgram('fileSystem', LIBS = ['boost_system', 'boost_filesystem'])
+makeProgram('filesystemExperiment',LIBS = ['boost_system', 'boost_filesystem'])
+makeProgram('testRateTimer', LIBS = [rateTimer])
+makeProgram('ping', LIBS = [pingPong, mmapper, rateTimer] )
+makeProgram('pong', LIBS = [pingPong, mmapper, rateTimer] )
+makeProgram('jsonExample', LIBS = ['jsoncpp', 'docopt'] )
+makeProgram('active_object', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
+makeProgram('queue_test', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
+makeProgram('testMpmc', LIBS = [mpmc])
+makeProgram('mpmcSanity', LIBS = [mpmc] )
+makeProgram('xcbexample', LIBS = ['xcb'])
+makeProgram('tradeReader', LIBS = [mmapper, trade])
+makeProgram('tradeServerMain', LIBS = [tradeServer, mmapper, trade])
+makeProgram('tradeClientMain', LIBS = [ mmapper, trade] )
+makeProgram('tradeSourceImpl', LIBS = [mmapper, trade]) 
+makeProgram('vwapNetworkClient', LIBS = [mmapper, trade] )
 
 

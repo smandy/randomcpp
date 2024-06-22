@@ -8,10 +8,9 @@ vanillaEnv.CompilationDatabase()
 def makeObject(x):
     return vanillaEnv.Object(source = f'{x}.cpp', target = f'build/{x}.o')
 
-
-def makeProgram(prog, **kwargs):
-    o = vanillaEnv.Object( source = f'{prog}.cpp' ,target=f'build/{prog}')
-    kwargs = extraDeps.get(prog, kwargs)
+def makeProgram(prog, extraDeps = {}):
+    o = vanillaEnv.Object(source = f'{prog}.cpp' ,target=f'build/{prog}')
+    kwargs = extraDeps.get(prog, {})
     #print(f"kwargs for {prog} are {kwargs}")
     vanillaEnv.Program(source = o, target = f'bin/{prog}', **kwargs)
 
@@ -42,6 +41,7 @@ queue_test testMpmc mpmcSanity xcbexample tradeReader tradeServerMain
 tradeClientMain tradeSourceImpl vwapNetworkClient""")
 
 def makeExtraDeps():
+    """Declare lib and extra kwargs (e.g. CPPFLAGS) here"""
     def l(*xs, **kwargs):
         ret = {}
         ret.update(kwargs)
@@ -66,9 +66,8 @@ def makeExtraDeps():
 
 extraDeps = makeExtraDeps()
 
-
 for prog in progs:
-    makeProgram(prog)
+    makeProgram(prog, extraDeps)
 
 
 

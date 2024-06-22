@@ -1,29 +1,7 @@
 import os, re
 
-#lsb_release = os.popen('lsb_release --short --release').read().strip()
-#print("LSB RELEASE is %s" % lsb_release)
-#COMPILER_PATH = '/opt/praxis/local/el-%s/gcc-4.8.2/bin' % lsb_release
-
-envPath = [ #COMPILER_PATH,
-            '/bin',
-            '/usr/bin' ]
-#print("Path is %s" % str(envPath))
-
-#vanillaLibs = ['pthread', 'boost_filesystem','boost_system', 'jsoncpp']
-
-vanillaLibs = []
-
 vanillaEnv = Environment(
-    #CPPPATH   = ['/home/andy/include'],
-    #CPPFLAGS  = ['-std=c++14', '-O3', '-Wall'], 
-    CPPFLAGS  = ['-std=c++23', '-g'],
-    CXXFLAGS  = ['-std=c++23', '-g'],
-    LIBS = vanillaLibs
-    #LIBS      = ['stdc++'],'boosat_filesystem_', 'boost_system'],
-    #LINKFLAGS = ['-L/usr/lib64'],
-    #ENV       = {
-    #'PATH' : ":".join(envPath)
-    #}
+    CPPFLAGS  = ['-std=c++23', '-g']
 )
 
 vanillaEnv.Tool('compilation_db')
@@ -32,8 +10,29 @@ vanillaEnv.CompilationDatabase()
 def makeObject(x):
     return vanillaEnv.Object(source = f'{x}.cpp', target = f'build/{x}.o')
 
+extraDeps = {}
+
+def makeProgram(prog, **kwargs):
+    o = vanillaEnv.Object( source = f'{prog}.cpp' ,target=f'build/{prog}')
+    kwargs = extraDeps.get(prog, kwargs)
+    #print(f"kwargs for {prog} are {kwargs}")
+    vanillaEnv.Program(source = o, target = f'bin/{prog}', **kwargs)
+
 mmapper, pingPong, mpmc, rateTimer, trade, tradeServer, vwap  = [ makeObject(x) for x in 'mmapper,pingPong,mpmc,rateTimer,trade,tradeServer,vwap'.split(',') ]
 
+for k,v in { 'twonk,fileSystem,filesystemExperiment' :  { 'LIBS' : ['boost_system', 'boost_filesystem'] },
+             'testRateTimer,ping,pong' : { 'LIBS': [pingPong, mmapper, rateTimer]},
+             'jsonExample' : { 'LIBS' : ['jsoncpp', 'docopt'] },
+             'active_object,queue_test' :  { 'CPPFLAGS' :['-DTBB_USE_DEBUG=1'],
+                                             'LIBS' : ['tbb', 'pthread'] },
+             'testMpmc,mpmcSanity' : { 'LIBS' : [mpmc]},
+             'xcbexample' : { 'LIBS' : ['xcb'] },
+             'tradeReader,tradeServerMain,tradeClientMain,tradeSourceImpl,vwapNetworkClient' : { 'LIBS' : [mmapper, trade, tradeServer] }
+            }.items():
+    bits = k.split(',')
+    for bit in bits:
+        #print(f"bit={bit} v={v}")
+        extraDeps[bit] = v
 
 progs = re.split("[ \\n]", """move relations moveTest2 traits
 forwarding forwarding2 doit lockExperiment tmp lfq rdtsc
@@ -55,30 +54,6 @@ optimizer foldExpression owner variadic sfinae sfinae2 stdalign
 noexcept nomove elision exceptions marketDataExample shared_lock
 finalizer hammer arrayTest polygon stairs helloWorld
 exprtk_sqrt_newton_raphson sharedFromThisTest""")
-
-extraDeps = {}
-
-for k,v in { 'twonk,fileSystem,filesystemExperiment' :  { 'LIBS' : ['boost_system', 'boost_filesystem'] },
-             'testRateTimer,ping,pong' : { 'LIBS': [pingPong, mmapper, rateTimer]},
-             'jsonExample' : { 'LIBS' : ['jsoncpp', 'docopt'] },
-             'active_object,queue_test' :  { 'CPPFLAGS' :['-DTBB_USE_DEBUG=1'],
-                                             'LIBS' : ['tbb', 'pthread'] },
-             'testMpmc,mpmcSanity' : { 'LIBS' : [mpmc]},
-             'xcbexample' : { 'LIBS' : ['xcb'] },
-             'tradeReader,tradeServerMain,tradeClientMain,tradeSourceImpl,vwapNetworkClient' : { 'LIBS' : [mmapper, trade, tradeServer] }
-            }.items():
-    bits = k.split(',')
-    for bit in bits:
-        #print(f"bit={bit} v={v}")
-        extraDeps[bit] = v
-
-#print(f"Extradeps are {extraDeps}")
-        
-def makeProgram(prog, **kwargs):
-    o = vanillaEnv.Object( source = f'{prog}.cpp' ,target=f'build/{prog}')
-    kwargs = extraDeps.get(prog, kwargs)
-    #print(f"kwargs for {prog} are {kwargs}")
-    vanillaEnv.Program(source = o, target = f'bin/{prog}', **kwargs)
 
 for prog in progs:
     makeProgram(prog)

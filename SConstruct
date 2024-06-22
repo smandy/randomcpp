@@ -156,14 +156,20 @@ progs = [ 'move',
           'sharedFromThisTest'
           ]
 
+
+
+
+
 def makeProgram(prog, **kwargs):
     o = vanillaEnv.Object( source = f'{prog}.cpp' ,target=f'build/{prog}')
     vanillaEnv.Program(source = o, target = f'bin/{prog}', **kwargs)
 
-for prog in progs:
-    makeProgram( prog)
 
-makeProgram('twonk', LIBS = ['boost_system', 'boost_filesystem'])
+    
+for prog in progs:
+    makeProgram(prog)
+
+makeProgram('twonk'     , LIBS = ['boost_system', 'boost_filesystem'])
 makeProgram('fileSystem', LIBS = ['boost_system', 'boost_filesystem'])
 makeProgram('filesystemExperiment',LIBS = ['boost_system', 'boost_filesystem'])
 makeProgram('testRateTimer', LIBS = [rateTimer])
@@ -171,10 +177,10 @@ makeProgram('ping', LIBS = [pingPong, mmapper, rateTimer] )
 makeProgram('pong', LIBS = [pingPong, mmapper, rateTimer] )
 makeProgram('jsonExample', LIBS = ['jsoncpp', 'docopt'] )
 makeProgram('active_object', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
-makeProgram('queue_test', CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
-makeProgram('testMpmc', LIBS = [mpmc])
-makeProgram('mpmcSanity', LIBS = [mpmc] )
-makeProgram('xcbexample', LIBS = ['xcb'])
+makeProgram('queue_test',    CPPFLAGS=['-DTBB_USE_DEBUG=1'], LIBS = ['tbb', 'pthread'])
+makeProgram('testMpmc',    LIBS = [mpmc])
+makeProgram('mpmcSanity',  LIBS = [mpmc] )
+makeProgram('xcbexample',  LIBS = ['xcb'])
 makeProgram('tradeReader', LIBS = [mmapper, trade])
 makeProgram('tradeServerMain', LIBS = [tradeServer, mmapper, trade])
 makeProgram('tradeClientMain', LIBS = [ mmapper, trade] )

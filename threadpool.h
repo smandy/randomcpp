@@ -1,18 +1,20 @@
-#include <vector>
-#include <thread>
-#include <queue>
-#include <mutex>
+#include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <future>
-#include <atomic>
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <vector>
 
-class ThreadPool {
+class ThreadPool
+{
 public:
-          ThreadPool(size_t numThreads);
+    ThreadPool(size_t numThreads);
 
-        template<class F, class... Args>
-    auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type> {
+    template <class F, class... Args>
+    auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>
+    {
         using returnType = typename std::result_of<F(Args...)>::type;
         auto task = std::make_shared<std::packaged_task<returnType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
         std::future<returnType> res = task->get_future();
@@ -24,16 +26,14 @@ public:
         }
         condition.notify_one();
         return res;
-        };
+    };
 
-    
     ~ThreadPool();
 
-    private:
+private:
     std::vector<std::thread> workers;
     std::queue<std::function<void()>> tasks;
     std::mutex queueMutex;
     std::condition_variable condition;
     std::atomic<bool> stop;
-
 };

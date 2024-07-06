@@ -2,29 +2,33 @@
 #include <iostream>
 #include <string>
 
-class myexc : public std::exception {
+class myexc : public std::exception
+{
 public:
-  virtual const char *what() const noexcept { return "arse bandit"; };
+    virtual const char* what() const noexcept { return "arse bandit"; };
 
 public:
-  virtual ~myexc() {}
+    virtual ~myexc() {}
 };
 
-void foo() {
-  std::cout << "I am in foo" << std::endl;
-  myexc f;
-  throw f;
-  std::cout << "I am out of foo" << std::endl;
+void foo()
+{
+    std::cout << "I am in foo" << std::endl;
+    myexc f;
+    throw f;
+    std::cout << "I am out of foo" << std::endl;
 }
 
-void doit() {
-  myexc g;
-  throw g;
-  foo();
+void doit()
+{
+    myexc g;
+    throw g;
+    foo();
 }
 
-int main(int argc, char *argv[]) {
-  // doit();
+int main(int argc, char* argv[])
+{
+    // doit();
 
-  foo();
+    foo();
 }

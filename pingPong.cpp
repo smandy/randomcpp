@@ -1,7 +1,8 @@
 #include "pingPong.h"
 #include "fcntl.h"
 
-namespace argoko {
+namespace argoko
+{
 
 PingPong::PingPong()
     : pingMap("/tmp/ping.dat", 8, O_RDWR | O_CREAT, true),

@@ -4,74 +4,82 @@
 #include <variant>
 #include <vector>
 
-struct Foo {};
-
-std::ostream &operator<<(std::ostream &os, const Foo &foo) {
-  os << "Foo()";
-  return os;
+struct Foo {
 };
 
-template <typename T> struct TD;
+std::ostream& operator<<(std::ostream& os, const Foo& foo)
+{
+    os << "Foo()";
+    return os;
+};
+
+template <typename T>
+struct TD;
 
 // helper type for the visitor #4
-template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-
-struct OverLord {
-  // template<typename T, typename = std::enable_if_t<std::is_same_v<T, int> >>
-  void operator()(int i) { std::cout << " i is " << i << std::endl; }
-
-  // void operator()( int i ) { std::cout << " i is " << i << std::endl; }
-
-  // template<typename T, typename =
-  // std::enable_if_t<std::is_same<std::remove_reference<T>,
-  // std::string>::value> >
-  template <typename T,
-            typename = std::enable_if_t<std::is_same_v<T, std::string>>>
-  void operator()(T s) {
-    std::cout << " s is " << s << std::endl;
-  }
-
-  // tvoid operator()( std::string s ) { std::cout << " s is " << s <<
-  // std::endl; }
+template <class... Ts>
+struct overloaded : Ts... {
+    using Ts::operator()...;
 };
 
-int main(int argc, char *argv[]) {
-  using MyVariant = std::variant<std::string, int>;
-  std::vector<MyVariant> xs{"woohoo", 20};
+struct OverLord {
+    // template<typename T, typename = std::enable_if_t<std::is_same_v<T, int> >>
+    void operator()(int i) { std::cout << " i is " << i << std::endl; }
 
-  auto func = overloaded{
-      [](std::string &&s) { std::cout << "String is " << s << std::endl; },
-      [](int &&x) { std::cout << "int is " << x << std::endl; }};
+    // void operator()( int i ) { std::cout << " i is " << i << std::endl; }
 
-  // TD<decltype(func)> what_are_you;
-  // int x { 21 };
-  // std::string s { "woohoo" };
-  func(21);
-  func("Wooho");
+    // template<typename T, typename =
+    // std::enable_if_t<std::is_same<std::remove_reference<T>,
+    // std::string>::value> >
+    template <typename T,
+              typename = std::enable_if_t<std::is_same_v<T, std::string>>>
+    void operator()(T s)
+    {
+        std::cout << " s is " << s << std::endl;
+    }
 
-  for (auto &x : xs) {
-    std::visit(
-        overloaded{
-            [](std::string &s) { std::cout << "String is " << s << std::endl; },
-            [](int &x) { std::cout << "int is " << x << std::endl; }},
-        x);
-  };
+    // tvoid operator()( std::string s ) { std::cout << " s is " << s <<
+    // std::endl; }
+};
 
-  auto o = OverLord{};
+int main(int argc, char* argv[])
+{
+    using MyVariant = std::variant<std::string, int>;
+    std::vector<MyVariant> xs{"woohoo", 20};
 
-  o(21);
+    auto func = overloaded{
+        [](std::string&& s) { std::cout << "String is " << s << std::endl; },
+        [](int&& x) { std::cout << "int is " << x << std::endl; }};
 
-  int x = 22;
-  o(x);
+    // TD<decltype(func)> what_are_you;
+    // int x { 21 };
+    // std::string s { "woohoo" };
+    func(21);
+    func("Wooho");
 
-  std::string s{"bazoo"};
-  std::string s2{"bazoo"};
+    for (auto& x : xs) {
+        std::visit(
+            overloaded{
+                [](std::string& s) { std::cout << "String is " << s << std::endl; },
+                [](int& x) { std::cout << "int is " << x << std::endl; }},
+            x);
+    };
 
-  o(std::string{"woohoo"});
+    auto o = OverLord{};
 
-  o(s2);
+    o(21);
 
-  o(std::move(s));
+    int x = 22;
+    o(x);
 
-  return 0;
+    std::string s{"bazoo"};
+    std::string s2{"bazoo"};
+
+    o(std::string{"woohoo"});
+
+    o(s2);
+
+    o(std::move(s));
+
+    return 0;
 }

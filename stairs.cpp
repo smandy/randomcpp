@@ -1,36 +1,39 @@
 
-#include <map>
 #include "pretty_printer.hpp"
-#include <iostream>
 #include <cstdint>
+#include <iostream>
+#include <map>
 
-class Solution {
+class Solution
+{
 
-    std::map<int,uint64_t> sols;
+    std::map<int, uint64_t> sols;
 
 public:
-    void _climbstairs(int n ) {
-        if (n==1) {
+    void _climbstairs(int n)
+    {
+        if (n == 1) {
             sols[1] = 1;
-        } else if (n==2) {
+        } else if (n == 2) {
             sols[2] = 2;
         } else {
-            sols[n] = (sols[n-2] + 1) + (sols[n-1] + 1);
+            sols[n] = (sols[n - 2] + 1) + (sols[n - 1] + 1);
         }
     }
 
-    int climbStairs(int n) {
-        for(int i = 1;i<=n;++i) {
+    int climbStairs(int n)
+    {
+        for (int i = 1; i <= n; ++i) {
             _climbstairs(i);
         }
-        print( std::cout, sols);
+        print(std::cout, sols);
         std::cout << std::endl;
         return sols[n];
     }
 };
 
-
-int main() {
+int main()
+{
 
     Solution sol;
     sol.climbStairs(4);

@@ -1,12 +1,13 @@
 #include "threadpool.h"
 #include <iostream>
 
-
-int square(int n) {
+int square(int n)
+{
     return n * n;
 };
 
-int main() {
+int main()
+{
     ThreadPool pool(4);
     auto result = pool.enqueue([](int answer) { return answer; }, 42);
     std::cout << result.get() << std::endl; // prints 42

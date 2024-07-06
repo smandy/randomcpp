@@ -1,31 +1,38 @@
 #include <iostream>
 
 // Head of the hammer
-class HammerHead {
+class HammerHead
+{
 public:
-    void strike() {
+    void strike()
+    {
         std::cout << "HammerHead: striking!" << std::endl;
     }
 };
 
 // Handle of the hammer
-class HammerHandle {
+class HammerHandle
+{
 public:
-    void grip() {
+    void grip()
+    {
         std::cout << "HammerHandle: gripping!" << std::endl;
     }
 };
 
 // Hammer that combines the head and handle
-class Hammer {
+class Hammer
+{
 public:
     Hammer(HammerHead& head, HammerHandle& handle) : m_head(head), m_handle(handle) {}
 
-    void strike() {
+    void strike()
+    {
         m_head.strike();
     }
 
-    void grip() {
+    void grip()
+    {
         m_handle.grip();
     }
 
@@ -35,7 +42,8 @@ private:
 };
 
 // Main function
-int main() {
+int main()
+{
     HammerHead head;
     HammerHandle handle;
     Hammer hammer(head, handle);

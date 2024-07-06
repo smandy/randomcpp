@@ -1,14 +1,16 @@
 #include <iostream>
 
-class Foo {
+class Foo
+{
 public:
-  mutable int x;
+    mutable int x;
 
-  Foo() : x{} {}
+    Foo() : x{} {}
 };
 
-int main(int argc, char *argv[]) {
-  const Foo x{};
-  x.x++;
-  std::cout << "x is " << x.x << std::endl;
+int main(int argc, char* argv[])
+{
+    const Foo x{};
+    x.x++;
+    std::cout << "x is " << x.x << std::endl;
 };

@@ -4,7 +4,7 @@
 
 #include "exprtk.hpp"
 
-# pacaur -Ss exprtk
+// pacaur -Ss exprtk
 
 template <typename T>
 void newton_sqrt()

@@ -19,7 +19,7 @@ def makePrograms(env):
     pmf ecpp2 ecpp4 rose selectif abbrev constVec erasure
     logExperiment backInserterEquiv socketServer2 transform2
     echoServer parameterPack threadTest myers2 memfunStuff vectorCast
-    property_tree lambdaTemplate tcpclient tupleInit knightTour
+    property_tree lambdaTemplate tcpclient tupleInit knightTour ctad
     knightTour2 helloWorld stringTest testPrettyPrint myPromise
     cherryPick packFun moveCapture initList chatServer bindFun
     stringReverse arrayDecay scopeExperiment lineReader
@@ -36,7 +36,7 @@ def makePrograms(env):
     sharedFromThisTest twonk fileSystem filesystemExperiment
     testRateTimer ping pong jsonExample active_object queue_test
     testMpmc mpmcSanity xcbexample tradeReader tradeServerMain
-    tradeClientMain tradeSourceImpl vwapNetworkClient""")
+    tradeClientMain tradeSourceImpl vwapNetworkClient equal_range""")
     #print(f"Prognames is {progNames}")
     deps = {}
     def add( strProgs, libs, **kwargs):

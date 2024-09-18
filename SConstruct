@@ -18,25 +18,26 @@ def makePrograms(env):
     transform transform3 condition tupleFun pointerFun socketServer
     pmf ecpp2 ecpp4 rose selectif abbrev constVec erasure
     logExperiment backInserterEquiv socketServer2 transform2
-    echoServer parameterPack threadTest myers2 memfunStuff vectorCast
-    property_tree lambdaTemplate tcpclient tupleInit knightTour ctad
-    knightTour2 helloWorld stringTest testPrettyPrint myPromise
-    cherryPick packFun moveCapture initList chatServer bindFun
-    stringReverse arrayDecay scopeExperiment lineReader
-    boostRefCountExample destructor printTest virtualExperiment2
-    dynclass except stringReverse2 synctimer timer periodic functors
-    daytimeClient daytimeServer asyncDatetimeServer streambuf_example
-    read_until_example baseTest read_a_file vector_test complex_test
-    destructure copy_test vectorfun transform_test overload testb
-    maptest mutabletest google jen foo moveTest3 bindExample
-    overloaded sink boost_shared_memory optimizer foldExpression owner
-    variadic sfinae sfinae2 stdalign noexcept nomove elision
-    exceptions marketDataExample shared_lock finalizer hammer
-    arrayTest polygon stairs helloWorld exprtk_sqrt_newton_raphson
-    sharedFromThisTest twonk fileSystem filesystemExperiment
-    testRateTimer ping pong jsonExample active_object queue_test
-    testMpmc mpmcSanity xcbexample tradeReader tradeServerMain
-    tradeClientMain tradeSourceImpl vwapNetworkClient equal_range""")
+    inverse_sqrt echoServer parameterPack threadTest myers2
+    memfunStuff vectorCast property_tree lambdaTemplate tcpclient
+    tupleInit knightTour ctad knightTour2 helloWorld stringTest
+    testPrettyPrint myPromise cherryPick packFun moveCapture initList
+    chatServer bindFun stringReverse arrayDecay scopeExperiment
+    lineReader boostRefCountExample destructor printTest
+    virtualExperiment2 dynclass except stringReverse2 synctimer timer
+    periodic functors daytimeClient daytimeServer asyncDatetimeServer
+    streambuf_example read_until_example baseTest read_a_file
+    vector_test complex_test destructure copy_test vectorfun
+    transform_test overload testb maptest mutabletest google jen foo
+    moveTest3 bindExample overloaded sink boost_shared_memory
+    optimizer foldExpression owner variadic sfinae sfinae2 stdalign
+    noexcept nomove elision exceptions marketDataExample shared_lock
+    finalizer hammer arrayTest polygon stairs helloWorld
+    exprtk_sqrt_newton_raphson sharedFromThisTest twonk fileSystem
+    filesystemExperiment testRateTimer ping pong jsonExample
+    active_object queue_test testMpmc mpmcSanity xcbexample
+    tradeReader tradeServerMain tradeClientMain tradeSourceImpl
+    vwapNetworkClient equal_range boost_ping boost_pong""")
     #print(f"Prognames is {progNames}")
     deps = {}
     def add( strProgs, libs, **kwargs):
@@ -57,6 +58,8 @@ def makePrograms(env):
     add('testMpmc mpmcSanity', [mpmc])
     add('xcbexample' , ['xcb'])
     add('tradeReader tradeServerMain tradeClientMain tradeSourceImpl vwapNetworkClient', [mmapper, trade, tradeServer])
+    add('boost_ping boost_pong', ['rt', 'pthread', 'boost_system'] )
+
     
     for prog in progNames:
         kwargs = deps.get(prog, {})

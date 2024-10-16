@@ -2,9 +2,9 @@
 #include <string>
 #include <tuple>
 
-using Tup = std::tuple<int, std::string>;
+// using Tup = std::tuple<int, std::string>;
 
-Tup return_tuple() { return Tup(21, "foo"); };
+auto return_tuple() { return std::make_tuple(21, "foo"); };
 
 int main()
 {

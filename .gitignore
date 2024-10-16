@@ -143,3 +143,5 @@ xcbexample
 /compile_commands.json
 /bin/
 /.cache/
+/sqrt.os
+/build/

@@ -1,15 +1,21 @@
 import os, re
 
 vanillaEnv = Environment(CPPFLAGS  = ['-std=c++23', '-g'])
-
 vanillaEnv.Tool('compilation_db')
 vanillaEnv.CompilationDatabase()
 
-def makeObject(x):
-    return vanillaEnv.Object(source = f'{x}.cpp', target = f'build/{x}.o')
+#cEnv = Environment(CPPFLAGS  = ['-g'])
+#cEnv.Tool('compilation_db')
+#cEnv.CompilationDatabase()
+
+
+def makeObject(x, ext = 'cpp'):
+    return vanillaEnv.Object(source = f'{x}.{ext}', target = f'build/{x}.o')
 
 mmapper, pingPong, mpmc, rateTimer, trade, tradeServer, vwap = \
     [ makeObject(x) for x in 'mmapper,pingPong,mpmc,rateTimer,trade,tradeServer,vwap'.split(',') ]
+
+sqrt = vanillaEnv.SharedLibrary( target = 'build/sqrt', source = ['sqrt.c'])
 
 def makePrograms(env):
     progNames = re.split("[ \\n]+", """move relations moveTest2 traits
